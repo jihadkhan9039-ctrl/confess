@@ -97,30 +97,11 @@
             transform: scale(1.05);
         }
 
-        /* Initial display safe zone-e rakhar jonno absolute bad deya hoyese */
         #noBtn {
             background-color: #b2bec3;
             color: white;
             z-index: 10;
-            transition: transform 0.1s ease;
-        }
-
-        .music-control {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: white;
-            padding: 10px;
-            border-radius: 50%;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            cursor: pointer;
-            z-index: 100;
-            font-size: 20px;
-            width: 45px;
-            height: 45px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            transition: all 0.1s ease-out;
         }
 
         /* Floating Hearts */
@@ -154,14 +135,9 @@
 </head>
 <body>
 
-    <div class="music-control" onclick="toggleMusic()" id="musicIcon">🎵</div>
-    <audio id="bgMusic" loop>
-        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
-    </audio>
-
     <div class="card">
         <div class="gif-container">
-            <img id="displayGif" src="https://api.moe-counter.ru/v1/gif/cute-bear-1.gif" onerror="this.src='https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbW90YnZ5YTN4NXF4cXA1bXp6ZzV6dzB4bXpndXN0bXN6ZzV6dzB4bSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/c7stAY96B4p4DAnO67/giphy.gif'" alt="Cute Animation">
+            <img id="displayGif" src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3N2NTA1bXNydXBlYmlkb2d2YW80YTB6NmZtbzZidms0M2t4MWRhdiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/c7stAY96B4p4DAnO67/giphy.gif" alt="Cute Bear">
         </div>
         
         <h1 id="question">I have something to tell you, will you listen?</h1>
@@ -179,23 +155,9 @@
         const noBtn = document.getElementById('noBtn');
         const yesBtn = document.getElementById('yesBtn');
         const displayGif = document.getElementById('displayGif');
-        const bgMusic = document.getElementById('bgMusic');
-        const musicIcon = document.getElementById('musicIcon');
-
-        function toggleMusic() {
-            if (bgMusic.paused) {
-                bgMusic.play();
-                musicIcon.innerText = "❤️";
-            } else {
-                bgMusic.pause();
-                musicIcon.innerText = "🎵";
-            }
-        }
 
         function moveNoButton() {
-            if(bgMusic.paused) { bgMusic.play(); musicIcon.innerText = "❤️"; }
-
-            // No te touch korar por e ota fixed hoye random position e jabe
+            // No button-e hover ba touch korle fixed hoye screen-er onno kothao chole jabe
             noBtn.style.position = 'fixed';
 
             const padding = 60;
@@ -208,35 +170,36 @@
             noBtn.style.left = randomX + 'px';
             noBtn.style.top = randomY + 'px';
 
-            // Yes button ta boro hobe
+            // No er dike gele Yes button prothome dheere dheere boro hobe
             yesScale += 0.2;
             yesBtn.style.transform = `scale(${yesScale})`;
         }
 
         function nextStep() {
             if (currentStep === 1) {
-                // Step 2 GIF and Text
+                // Step 2: Trishna I love you
                 displayGif.src = "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbXp4bW16Z3N6bXp4bXp4bXp4bXp4bXp4bXp4bXp4bXp4bSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/L4lvBIFFKYGaA/giphy.gif"; 
                 
                 questionText.innerHTML = "Trishna I love you ❤️<br>Will you be my girlfriend?";
                 
-                // Yes button reset
+                // Yes button reset 
                 yesScale = 1;
                 yesBtn.style.transform = `scale(${yesScale})`;
                 
-                // No button ke abar card er bhetor niamit jaigay niye asha
+                // No button abar card er bhetor normal static positions e niye asha
                 noBtn.style.position = 'static'; 
                 
+                // Falling hearts start
                 setInterval(createHeart, 250);
                 currentStep = 2;
             } else if (currentStep === 2) {
-                // Final Step GIF and Text
+                // Final Step: Response
                 displayGif.src = "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbXp4bW16Z3N6bXp4bXp4bXp4bXp4bXp4bXp4bXp4bXp4bSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/14srM6XALUe2Sg/giphy.gif"; 
                 
                 questionText.innerHTML = "I have waited so long for you, you are the only one 💖";
                 questionText.classList.add('romantic-text');
                 
-                // Hide container completely
+                // Card theke button container ganeb kore deya
                 document.getElementById('btnContainer').style.display = 'none';
             }
         }
