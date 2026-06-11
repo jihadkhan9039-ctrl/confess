@@ -25,7 +25,7 @@
         }
 
         .card {
-            background: rgba(255, 255, 255, 0.85);
+            background: rgba(255, 255, 255, 0.9);
             backdrop-filter: blur(10px);
             padding: 35px 25px;
             border-radius: 25px;
@@ -56,10 +56,9 @@
             font-size: 24px;
             margin-bottom: 25px;
             line-height: 1.5;
-            min-height: 72px; /* Layout single line thakte help korbe */
+            min-height: 72px;
         }
 
-        /* Romantic cursive font for final text */
         .romantic-text {
             font-family: 'Dancing Script', cursive;
             font-size: 32px;
@@ -74,6 +73,7 @@
             margin-top: 20px;
             position: relative;
             min-height: 60px;
+            width: 100%;
         }
 
         button {
@@ -90,21 +90,21 @@
             background: linear-gradient(135deg, #ff7675, #d63031);
             color: white;
             box-shadow: 0 5px 15px rgba(214, 48, 49, 0.3);
-            z-index: 100;
+            z-index: 10;
         }
 
         #yesBtn:hover {
             transform: scale(1.05);
         }
 
+        /* Initial display safe zone-e rakhar jonno absolute bad deya hoyese */
         #noBtn {
             background-color: #b2bec3;
             color: white;
-            position: absolute;
-            transition: all 0.1s ease-out;
+            z-index: 10;
+            transition: transform 0.1s ease;
         }
 
-        /* Music Floating Control */
         .music-control {
             position: fixed;
             top: 20px;
@@ -123,7 +123,7 @@
             align-items: center;
         }
 
-        /* Heart Floating Animation */
+        /* Floating Hearts */
         .heart {
             position: absolute;
             background-color: #ff7675;
@@ -154,7 +154,6 @@
 </head>
 <body>
 
-    <!-- Background Music (Romantic Lo-Fi / Instrumental) -->
     <div class="music-control" onclick="toggleMusic()" id="musicIcon">🎵</div>
     <audio id="bgMusic" loop>
         <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
@@ -162,11 +161,10 @@
 
     <div class="card">
         <div class="gif-container">
-            <!-- Initial Cute Gif -->
-            <img id="displayGif" src="https://media.tenor.com/images/8a39a44b1b36fa2f168f0003b8793b80/tenor.gif" alt="Cute Bear">
+            <img id="displayGif" src="https://api.moe-counter.ru/v1/gif/cute-bear-1.gif" onerror="this.src='https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbW90YnZ5YTN4NXF4cXA1bXp6ZzV6dzB4bXpndXN0bXN6ZzV6dzB4bSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/c7stAY96B4p4DAnO67/giphy.gif'" alt="Cute Animation">
         </div>
         
-        <h1 id="question"></h1>
+        <h1 id="question">I have something to tell you, will you listen?</h1>
         
         <div class="btn-container" id="btnContainer">
             <button id="yesBtn" onclick="nextStep()">Yes</button>
@@ -184,22 +182,6 @@
         const bgMusic = document.getElementById('bgMusic');
         const musicIcon = document.getElementById('musicIcon');
 
-        // Typewriter Effect Function
-        function typeWriter(text, i, callback) {
-            if (i < text.length) {
-                questionText.innerHTML = text.substring(0, i + 1);
-                setTimeout(function() {
-                    typeWriter(text, i + 1, callback);
-                }, 40);
-            } else if (callback) {
-                callback();
-            }
-        }
-
-        // Start text
-        typeWriter("I have something to tell you, will you listen?", 0);
-
-        // Music Play/Pause toggle
         function toggleMusic() {
             if (bgMusic.paused) {
                 bgMusic.play();
@@ -211,8 +193,10 @@
         }
 
         function moveNoButton() {
-            // First click/hover dynamic music autoplay fallback
             if(bgMusic.paused) { bgMusic.play(); musicIcon.innerText = "❤️"; }
+
+            // No te touch korar por e ota fixed hoye random position e jabe
+            noBtn.style.position = 'fixed';
 
             const padding = 60;
             const maxX = window.innerWidth - noBtn.offsetWidth - padding;
@@ -221,50 +205,42 @@
             const randomX = Math.max(padding, Math.floor(Math.random() * maxX));
             const randomY = Math.max(padding, Math.floor(Math.random() * maxY));
 
-            noBtn.style.position = 'fixed';
             noBtn.style.left = randomX + 'px';
             noBtn.style.top = randomY + 'px';
 
-            // No button e joto bar jabe, Yes button to boro hobe
-            yesScale += 0.15;
+            // Yes button ta boro hobe
+            yesScale += 0.2;
             yesBtn.style.transform = `scale(${yesScale})`;
         }
 
         function nextStep() {
             if (currentStep === 1) {
-                // Step 2 Gif and Text Change
-                displayGif.src = "https://media.tenor.com/images/db582ed7c30154bf4856f6f966fcbd0a/tenor.gif"; // Proposal Gif
+                // Step 2 GIF and Text
+                displayGif.src = "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbXp4bW16Z3N6bXp4bXp4bXp4bXp4bXp4bXp4bXp4bXp4bSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/L4lvBIFFKYGaA/giphy.gif"; 
                 
-                // Reset buttons and text
-                questionText.innerHTML = "";
+                questionText.innerHTML = "Trishna I love you ❤️<br>Will you be my girlfriend?";
+                
+                // Yes button reset
                 yesScale = 1;
                 yesBtn.style.transform = `scale(${yesScale})`;
                 
-                typeWriter("Trishna I love you... \nWill you be my girlfriend?", 0);
+                // No button ke abar card er bhetor niamit jaigay niye asha
+                noBtn.style.position = 'static'; 
                 
-                // Reset No button position safely back inside card
-                noBtn.style.position = 'absolute';
-                noBtn.style.left = 'auto';
-                noBtn.style.top = 'auto';
-                
-                // Heart Rain starts
                 setInterval(createHeart, 250);
                 currentStep = 2;
             } else if (currentStep === 2) {
-                // Final Step Gif and Text Change
-                displayGif.src = "https://media.tenor.com/images/3763f350c333f272a8cb9e68c92e9e6f/tenor.gif"; // Cute hug gif
+                // Final Step GIF and Text
+                displayGif.src = "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbXp4bW16Z3N6bXp4bXp4bXp4bXp4bXp4bXp4bXp4bXp4bSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/14srM6XALUe2Sg/giphy.gif"; 
                 
-                questionText.innerHTML = "";
+                questionText.innerHTML = "I have waited so long for you, you are the only one 💖";
                 questionText.classList.add('romantic-text');
                 
-                typeWriter("I have waited so long for you, you are the only one 💖", 0);
-                
-                // Hide buttons
+                // Hide container completely
                 document.getElementById('btnContainer').style.display = 'none';
             }
         }
 
-        // Heart generation logic
         function createHeart() {
             const heart = document.createElement('div');
             heart.classList.add('heart');
